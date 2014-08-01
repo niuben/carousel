@@ -21,11 +21,11 @@ $.fn.carousel  =  function (option) {
 		//滑动事件
 		speed: 300,
 		//滑动开始时触发 
-		onStartSlide:function(e,nowPos){
+		startCallBack:function(e,nowPos){
 			null;
 		},
 		//滑动结束时触发
-		onStopSlide:function(e,nowPos){
+		endCallback:function(e,nowPos){
 			null;
 		}
 		  		  
@@ -160,7 +160,7 @@ $.fn.carousel  =  function (option) {
 		if(nowPos == oldPos){
 			return false;
 		}
-		defaults.onStartSlide(e,nowPos);
+		defaults.startCallBack(e,nowPos);
 		$(listSonObj).eq(nowPos - 1).show();		
 		
 		var marginLeft;
@@ -176,7 +176,7 @@ $.fn.carousel  =  function (option) {
 			'marginLeft': marginLeft
 		}, defaults.speed, function () {
 			changeClass(nowPos);
-			defaults.onStopSlide(e, nowPos);
+			defaults.endCallback(e, nowPos);
 			$(listSonObj).eq(oldPos - 1).hide();
 			$(slideObj).css("marginLeft", 0);
 			moving = 0;

@@ -7,13 +7,13 @@
 </head>
 <body>
 <div class="bar">
-  <a href="javascript:void(0);" title="下翻" id="next" class="next"></a>
-  <a href="javascript:void(0);" title="上翻" id="prev" class="prev"></a>
+  <a href="javascript:void(0);" id="prev" class="prev"></a>
   <div id="page" class="page">
     <!-- <a href="#" class="current">1</a>
     <a href="#">2</a>
     <a href="#">3</a> -->
   </div>
+  <a href="javascript:void(0);" id="next" class="next"></a>
 </div>
 
 <ul class="clearfix carousel">
@@ -29,14 +29,15 @@
   <li>10</li>
 </ul>
 
-<script type="text/javascript" src="../jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="jquery-1.7.1.min.js"></script>
 <script type="text/javascript" src="_jquery.carousel.js"></script>
 <script type="text/javascript">
   $(".carousel").carousel({
     prevID: "prev",    
     nextID: "next",
     pageID: "page",
-    loop: 0,
+    loop: 1,
+    speed: 200,
     currentClass: "current"
 	});  		 	
 </script>
