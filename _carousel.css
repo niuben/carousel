@@ -1,0 +1,84 @@
+/*可控的左右滚动*/
+.bar { width: 423px; height: 18px; }
+.bar .prev,
+.bar .next {
+	float: right;
+	width: 18px;
+	height: 18px;
+	display: block;
+	outline: none;
+	background-image: url(navigator.png);
+	background-repeat: no-repeat;
+}
+.bar .prev {
+	margin-right: -1px;
+	background-position: -40px 0;
+}
+.bar .next { background-position: -17px 0; }
+.bar .prev: hover {
+	text-decoration: none;
+	background-position: 0 0;
+}
+.bar .next: hover {
+	text-decoration: none;
+	background-position: -57px 0;
+}
+	
+.page { 
+	float: right; 
+}
+.page a {
+	display: inline-block;
+	width: 6px;
+	height: 6px;
+	margin: 6px 5px 0 0;
+	font-size: 0px;
+	color: #70B2D5;
+	background: url(navigator.png) -80px -10px no-repeat;
+	outline: none;
+	overflow: hidden;
+}
+.page a.current,.page a:hover{
+	color: #CACACA;
+	background: url(navigator.png) -80px 0 no-repeat;
+}
+
+/*.scrollable-panel {
+	position: relative;
+	width: 500px;
+	height: 76px;
+	overflow: hidden;
+}
+.scrollable-panel div {
+	position: absolute;
+	width: 2010em; /* 设置足够的宽度 */
+/*} 
+.scrollable-panel img {
+	float: left;
+	display: inline; 修复IE6双边距BUG	
+	border: 1px solid #ccc;
+	width: 120px;
+	height: 60px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+} */
+.carousel{
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.carousel li {
+	padding: 0;
+	margin: 0;
+	float: left;
+	/*display: inline;  修复IE6双边距BUG 	*/
+	width: 120px;
+	height: 60px;
+	line-height: 60px;
+	text-align: center;
+	font-size: 16px;
+	font-weight: bold;
+	border: 1px solid #ccc;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+}
