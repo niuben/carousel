@@ -14,15 +14,15 @@ API
 **参数**
 
 <pre>
-参数名称      默认值  描述
-prevID        null    上一页按钮ID
-nextID        null    下一页按钮ID
-pageID        null    页码列表ID（显示为小圆点）
+参数名称      默认值  	描述
+prevID        null    	上一页按钮ID
+nextID        null    	下一页按钮ID
+pageID        null    	页码列表ID（显示为小圆点）
 currentClass  "current" 当前页码加载的样式
-loop          1       是否可以连续滑动
-speed         300     滑动需要时间，单位为ms。数值越小，速度越快。
-startCallback fun     滑动开始触发,会传入event和当前页数
-endCallback   fun     滑动结束触发,会传入event和当前页数
+loop          1       	是否可以连续滑动
+speed         300     	滑动需要时间，单位为ms。数值越小，速度越快。
+startCallback fun     	滑动开始触发,会传入event和当前页数
+endCallback   fun     	滑动结束触发,会传入event和当前页数
 </pre>
 
 
