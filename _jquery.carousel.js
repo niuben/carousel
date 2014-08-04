@@ -15,7 +15,7 @@ $.fn.carousel  =  function (option) {
 		//页面区域
 		pageID: "",		
 		//页面当前状态
-		currentClass: "",
+		currentClass: "current",
 		//是否循环
 		loop: 1,
 		//滑动事件
@@ -118,12 +118,14 @@ $.fn.carousel  =  function (option) {
 			if (nowPos <= 1) {
 				if(defaults.loop){
 					nowPos = nums;
-					move(e,nowPos);
+					var lastObj = $(listSonObj).last();
+					$(slideObj).prepend(lastObj);
+					move(e, nowPos, "prev");
 				}
 				return true;					
 			}
 			nowPos--;
-			move(e,nowPos);    			
+			move(e, nowPos, "prev");    			
 		});
 
 		$(nextObj).bind('click', function (e) {		   			
@@ -133,12 +135,14 @@ $.fn.carousel  =  function (option) {
 			if (nowPos >= nums) {
 				if(defaults.loop){
 					nowPos = 1;
-					move(e,nowPos);			
+					var firstObj = $(listSonObj).first();
+					$(slideObj).append(firstObj);
+					move(e, nowPos, "next");			
 				}				
 				return true;					
 			}		
 			nowPos++;
-			move(e,nowPos);			
+			move(e, nowPos, "next");
 		});
 
 		$(pageObj).children().each(function(i){
@@ -147,7 +151,8 @@ $.fn.carousel  =  function (option) {
 					return false;
 				}
 				nowPos = i + 1;
-				move(e, nowPos);
+				var direction = nowPos > oldPos ? "next" : "prev"; 
+				move(e, nowPos, direction);
 			});
 		});
 	}
@@ -155,7 +160,7 @@ $.fn.carousel  =  function (option) {
 	/*
 		设置显示区域margin-left属性，实现滑动功能
 	*/
-	function move(e, nowPos){
+	function move(e, nowPos, direction){
 		
 		if(nowPos == oldPos){
 			return false;
@@ -163,8 +168,8 @@ $.fn.carousel  =  function (option) {
 		defaults.startCallBack(e,nowPos);
 		$(listSonObj).eq(nowPos - 1).show();		
 		
-		var marginLeft;
-		if(nowPos > oldPos){
+		// var marginLeft;
+		if(direction == "next"){
 			marginLeft = -liWidth;
 		}else{
 			$(slideObj).css("marginLeft", -liWidth + "px");
