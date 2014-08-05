@@ -1,8 +1,8 @@
 /*可控的左右滚动*/
 .bar {
 	position: absolute;
-	top: 195px;
-	left: 400px;
+	top: 280px;
+	left: 300px;
 	margin-left: -100px;
 	height: 18px; 
 }
@@ -13,7 +13,7 @@
 	height: 18px;
 	display: block;
 	outline: none;
-	background-image: url(navigator.png);
+	background-image: url(../img/navigator.png);
 	background-repeat: no-repeat;
 }
 .bar .prev {
@@ -23,11 +23,11 @@
 .bar .next { 
 	background-position: -17px 0; 
 }
-.bar .prev: hover {
+.bar .prev:hover {
 	text-decoration: none;
 	background-position: 0 0;
 }
-.bar .next: hover {
+.bar .next:hover {
 	text-decoration: none;
 	background-position: -57px 0;
 }
@@ -44,13 +44,13 @@
 	margin: 6px 5px 0 0;
 	font-size: 0px;
 	color: #70B2D5;
-	background: url(navigator.png) -80px -10px no-repeat;
+	background: url(../img/navigator.png) -80px -10px no-repeat;
 	outline: none;
 	overflow: hidden;
 }
 .page a.current,.page a:hover{
 	color: #CACACA;
-	background: url(navigator.png) -80px 0 no-repeat;
+	background: url(../img/navigator.png) -80px 0 no-repeat;
 }
 
 /*.scrollable-panel {
@@ -81,9 +81,8 @@
 	padding: 0;
 	margin: 0;
 	float: left;
-	/*display: inline;  修复IE6双边距BUG 	*/	
-	width: 800px;
-	height: 210px;
+	width: 500px;
+	height: 300px;	
 	line-height: 210px;
 	text-align: center;
 	font-size: 16px;
@@ -91,4 +90,8 @@
 	border: 1px solid #ccc;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
+}
+.carousel li img{
+	width: 100%;
+	height: 100%;
 }

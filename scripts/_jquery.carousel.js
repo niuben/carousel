@@ -36,24 +36,30 @@ $.fn.carousel  =  function (option) {
 	var slideObj = this;
 
 	var listSonObj = $(slideObj).children();
-	//单个的宽度
-	var liWidth = 0;
-	//单个列表高度	
-	var liHeight = 0;	
+	
+	var liWidth = 0,
+	liHeight = 0;
+
 	//列表的数目	
 	var nums = 0;
 
-	var prevObj = $("#" + defaults.prevID);	 
-	var nextObj = $("#" + defaults.nextID);
-	var pageObj = $("#" + defaults.pageID);
+	var prevObj = $("#" + defaults.prevID),
+	nextObj = $("#" + defaults.nextID),
+	pageObj = $("#" + defaults.pageID);
 
-	var nowPos = 1;
-	var oldPos = 1;
+	//记录滑动时的位置
+	var nowPos = 1,
+	oldPos = 1;
 
+	//滑动的指针
 	var moving = 0;
 
+	//将第一个元素放在最后,或将最后一个元素放在第一个
+	var isToEnd = 0,
+	isToFirst = 0;
+
 	function install(option){
-		  		 
+
 		liWidth =  $(listSonObj).first().outerWidth();
 		liHeight = $(listSonObj).first().outerHeight();	 		 
 		nums = listSonObj.length;
@@ -100,7 +106,7 @@ $.fn.carousel  =  function (option) {
 		});
 		$(slideObj).wrapAll(wrapObj);	      		
 		$(slideObj).css({
-			'width': liWidth * nums + "px",
+			'width': liWidth * 2 + "px",
 			'height': liHeight + "px"
 		});
 
@@ -112,37 +118,11 @@ $.fn.carousel  =  function (option) {
 	function bind(){
 				  		  		
 		$(prevObj).bind('click', function (e) {	
-			if(moving){
-				return false;
-			}
-			if (nowPos <= 1) {
-				if(defaults.loop){
-					nowPos = nums;
-					var lastObj = $(listSonObj).last();
-					$(slideObj).prepend(lastObj);
-					move(e, nowPos, "prev");
-				}
-				return true;					
-			}
-			nowPos--;
-			move(e, nowPos, "prev");    			
+			toPrev(e);			
 		});
 
 		$(nextObj).bind('click', function (e) {		   			
-			if(moving){
-				return false;
-			}
-			if (nowPos >= nums) {
-				if(defaults.loop){
-					nowPos = 1;
-					var firstObj = $(listSonObj).first();
-					$(slideObj).append(firstObj);
-					move(e, nowPos, "next");			
-				}				
-				return true;					
-			}		
-			nowPos++;
-			move(e, nowPos, "next");
+			toNext(e);
 		});
 
 		$(pageObj).children().each(function(i){
@@ -155,11 +135,105 @@ $.fn.carousel  =  function (option) {
 				move(e, nowPos, direction);
 			});
 		});
+
+		var touchstart = "onmousedown" in window ? "mousedown" : "touchstart",
+		touchmove = "onmousemove" in window ? "mousemove" : "touchmove",
+		touchend = "onmouseup" in window ? "mouseup" : "touchend";
+
+		var startPos = 0,
+		currentPos = 0,
+		draging = 0;
+
+		$(slideObj).bind(touchstart, function(e){
+			draging = 1;
+			startPos = e.clientX;
+		});
+
+		$(slideObj).bind(touchmove, function(e){
+			if(!draging) return false;
+			currentPos = e.clientX;
+			if(currentPos > startPos ){
+				var prevPos = nowPos - 2 ;
+				prevPos	= prevPos > 0 ? prevPos : nums - 1; 
+				if(!isToFirst){
+					isToFirst = 1;
+					toFirst();
+				}				
+				$(listSonObj).eq(prevPos).show();
+				$(slideObj).css("marginLeft", -liWidth + currentPos - startPos + "px");
+			}else{
+				var nextPos = nowPos < nums ? nowPos : 0;
+				if(!isToEnd){
+					isToEnd = 1;
+					toEnd();
+				}
+				$(listSonObj).eq(nextPos).show();
+				$(slideObj).css("marginLeft", currentPos - startPos + "px");
+			}
+		});
+
+		$(slideObj).bind(touchend, function(e){
+			draging = 0;
+			currentPos = e.clientX;
+			if(Math.abs(currentPos - startPos) < 10){
+				return false;
+			}
+
+			if(currentPos > startPos){
+				toPrev(e);
+			}else{
+				toNext(e);
+			}
+		});
+
+		return false;
 	}
 
-	/*
-		设置显示区域margin-left属性，实现滑动功能
-	*/
+	function toPrev(e){
+		if(moving){
+			return false;
+		}
+		if (nowPos <= 1) {
+			if(defaults.loop){
+				nowPos = nums;
+				isToFirst = 1;				
+				toFirst();
+				move(e, nowPos, "prev");
+			}
+			return true;					
+		}
+		nowPos--;
+		move(e, nowPos, "prev");
+	}
+
+	function toNext(e){
+		if(moving){
+			return false;
+		}
+		if (nowPos >= nums) {
+			if(defaults.loop){
+				nowPos = 1;
+				isToEnd = 1;				
+				toEnd();
+				move(e, nowPos, "next");			
+			}				
+			return true;					
+		}		
+		nowPos++;
+		move(e, nowPos, "next");
+	}
+
+	function toEnd(){
+		var firstObj = $(slideObj).children().first();
+		$(slideObj).append(firstObj);
+	}
+
+	function toFirst(){
+		var lastObj = $(slideObj).children().last();
+		$(slideObj).prepend(lastObj);
+	}
+
+	//设置显示区域margin-left属性，实现滑动功能
 	function move(e, nowPos, direction){
 		
 		if(nowPos == oldPos){
@@ -172,6 +246,8 @@ $.fn.carousel  =  function (option) {
 		if(direction == "next"){
 			marginLeft = -liWidth;
 		}else{
+			// var _marginLeft = parseInt($(slideObj).css("marginLeft"));
+			// _marginLeft = _marginLeft ? _marginLeft : -liWidth; 
 			$(slideObj).css("marginLeft", -liWidth + "px");
 			marginLeft = 0;
 		}
@@ -184,14 +260,22 @@ $.fn.carousel  =  function (option) {
 			defaults.endCallback(e, nowPos);
 			$(listSonObj).eq(oldPos - 1).hide();
 			$(slideObj).css("marginLeft", 0);
+			
+			if(isToEnd){
+				isToEnd = 0;
+				toFirst();
+			}
+			if(isToFirst){
+				isToFirst = 0;
+				toEnd();
+			}
+
 			moving = 0;
 			oldPos = nowPos;
 		});
 	};
 
-	/*
-		改变翻页的class
-	*/
+	/* 改变翻页的class */
 	function changeClass(nowPos){
 		$(pageObj).children().removeClass(defaults.currentClass);
 		$(pageObj).children().eq(nowPos - 1).addClass(defaults.currentClass);
