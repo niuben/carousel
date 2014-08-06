@@ -1,17 +1,17 @@
 /*可控的左右滚动*/
 .bar {
 	position: absolute;
+	z-index: 100;
 	top: 280px;
 	left: 300px;
 	margin-left: -100px;
-	height: 18px; 
+	height: 18px;
 }
 .bar .prev,
 .bar .next {
 	float: left;
 	width: 18px;
 	height: 18px;
-	display: block;
 	outline: none;
 	background-image: url(../img/navigator.png);
 	background-repeat: no-repeat;
@@ -41,7 +41,7 @@
 	display: inline-block;
 	width: 6px;
 	height: 6px;
-	margin: 6px 5px 0 0;
+	margin: 6px 2px 0 2px;
 	font-size: 0px;
 	color: #70B2D5;
 	background: url(../img/navigator.png) -80px -10px no-repeat;

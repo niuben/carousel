@@ -1,0 +1,40 @@
+<!DOCTYPE>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">  
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/_carousel.css">
+	<title>carousel</title>
+</head>
+<body>
+<div class="bar">
+  <a href="javascript:void(0);" id="prev" class="prev"></a>
+  <div id="page" class="page">
+    <!-- <a href="#" class="current">1</a>
+    <a href="#">2</a>
+    <a href="#">3</a> -->
+  </div>
+  <a href="javascript:void(0);" id="next" class="next"></a>
+</div>
+
+<ul class="clearfix carousel">
+  <li><img src="img/1.jpg" draggable="false"/></li>
+  <li><img src="img/2.jpg" draggable="false"/></li>
+  <li><img src="img/3.jpg" draggable="false"/></li>
+  <li><img src="img/4.jpg" draggable="false"/></li>
+</ul>
+
+<!-- <script type="text/javascript" src="../zepto.js"></script> -->
+<script type="text/javascript" src="scripts/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="scripts/_jquery.carousel.touch.js"></script>
+<script type="text/javascript">
+  $(".carousel").carousel({
+    prevID: "prev",    
+    nextID: "next",
+    pageID: "page",
+    loop: 1
+	});  		 	
+</script>
+
+</body>
+</html>
