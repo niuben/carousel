@@ -19,7 +19,7 @@ $.fn.carousel  =  function (option) {
 		//是否循环
 		loop: 1,
 		//滑动事件
-		speed: 300,
+		speed: 400,
 		//滑动开始时触发 
 		startCallBack:function(e,nowPos){
 			null;

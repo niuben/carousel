@@ -22,6 +22,8 @@ $.fn.carousel  =  function (option) {
 		isBuffer: 1,
 		//滑动事件
 		speed: 300,
+		//支持鼠标滑动拖动
+		isTouch: 1,
 		//滑动开始时触发 
 		startCallBack:function(e,nowPos){
 			null;
@@ -168,16 +170,10 @@ $.fn.carousel  =  function (option) {
 	function bind(){
 				  		  		
 		$(prevObj).bind('click', function (e) {	
-			if(moving){
-				return false;
-			}
 			toPrev(e);
 		});
 
 		$(nextObj).bind('click', function (e) {		   			
-			if(moving){
-				return false;
-			}
 			toNext(e);
 		});
 
@@ -199,6 +195,8 @@ $.fn.carousel  =  function (option) {
 			});
 		});
 
+		if(!defaults.isTouch) return false;
+
 		var touchstart = "onmousedown" in window ? "mousedown" : "touchstart",
 		touchmove = "onmousemove" in window ? "mousemove" : "touchmove",
 		touchend = "onmouseup" in window ? "mouseup" : "touchend";
@@ -207,28 +205,35 @@ $.fn.carousel  =  function (option) {
 		currentPos = 0,
 		draging = 0;
 
-		$(slideObj).bind(touchstart, function(e){
+		$(slideObj).find("img").bind("dragstart", function(e){
+  			e.preventDefault();
+			return false;
+		});
+
+
+		$(slideObj).bind("mousedown", function(e){
+			if(moving) return false;
 			draging = 1;
 			startPos = e.clientX;
 			currentPos = 0;
 		});
 
-		$(slideObj).bind(touchmove, function(e){
+		$(slideObj).bind("mousemove", function(e){
 			if(!draging) return false;			
 			for(var i = 0; i < curPosArray.length; i++){				
 				var curObj = $(slideObj).children().eq(curPosArray[i] - 1);
 				currentPos = currentPos ? currentPos : startPos;
 				var _left = parseInt(curObj.css("left"));
 				_left = _left + e.clientX - currentPos;
-				console.log(curPosArray[i] + "|" + _left);
 				curObj.css("left", _left + "px");
 								
 			}
 			currentPos = e.clientX;
 		});
 
-		$(slideObj).bind(touchend, function(e){
-			draging = 0;
+		$(document).bind("mouseup", function(e){
+			// alert(draging);
+			if(!draging) return false;
 			currentPos = e.clientX;
 			if(Math.abs(currentPos - startPos) < 10){
 				startPos = 0;
@@ -240,13 +245,17 @@ $.fn.carousel  =  function (option) {
 			}else{
 				toNext(e);
 			}
+			draging = 0;
 		});
 
 		return false;
 	}
 
 	// function set
-	function toPrev(e){		
+	function toPrev(e){
+		if(moving){
+			return false;
+		}	
 		if (nowPos <= 1) {
 			if(defaults.loop){
 				nowPos = nums;
@@ -259,6 +268,9 @@ $.fn.carousel  =  function (option) {
 	}
 
 	function toNext(e){
+		if(moving){
+			return false;
+		}
 		if (nowPos >= nums) {
 			if(defaults.loop){
 				nowPos = 1;
