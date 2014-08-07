@@ -299,7 +299,7 @@ $.fn.carousel  =  function (option) {
 			(function(curObj, _left){
 				curObj.animate({
 					'left': _left + "px"
-				}, defaults.speed, "linear", function(){
+				}, defaults.speed, function(){
 					
 					// $(curObj).animate({
 					// 	'left': _left + "px"
