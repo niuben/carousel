@@ -51,10 +51,6 @@ $.fn.carousel  =  function (option) {
 			this.$nextObj = $("#" + defaults.nextID);
 			this.$pageObj = $("#" + defaults.pageID);
 				 	  		 		  	  		
-			// slideObj.move = function(nowPos){
-			// 	this.move(null, nowPos);
-			// }
-
 			
 			this.initSlide();
 
@@ -111,8 +107,7 @@ $.fn.carousel  =  function (option) {
 		}
 	});
 	
-	$.extend(this, {
-		
+	$.extend(this, {		
 		/* 创建页码 */
 		createPage: function(){
 			var html = "";
@@ -161,7 +156,7 @@ $.fn.carousel  =  function (option) {
 				});
 			});
 		},
-
+		//绑定鼠标拖动事件
 		touch: function(){
 			if(!defaults.isTouch) return false;
 
@@ -203,7 +198,8 @@ $.fn.carousel  =  function (option) {
 			$(document).bind("mouseup", function(e){
 				if(!_draging) return false;
 				_draging = 0;
-				_currentPos = e.clientX;			
+				_currentPos = e.clientX;
+							
 				if(Math.abs(_currentPos - _startPos) < 10){
 					_startPos = 0;
 					_currentPos = 0;
@@ -216,6 +212,7 @@ $.fn.carousel  =  function (option) {
 				}else{
 					_this.toNext(e);
 				}
+
 			});
 			return false;
 		}
