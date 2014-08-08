@@ -22,7 +22,7 @@ $.fn.carousel  =  function (option) {
 		isBuffer: 1,
 		//滑动事件
 		speed: 300,
-		//支持鼠标滑动拖动
+		//支持鼠标拖动翻页
 		isTouch: 1,
 		//滑动开始时触发 
 		startCallBack:function(e,nowPos){
@@ -52,21 +52,13 @@ $.fn.carousel  =  function (option) {
 
 	//记录滑动时的位置
 	var nowPos = 1,
-	nextPos = 0,
-	prevPos = 0,
 	oldPos = 1;
 
+	//存上一页、当前页、下一页位置的数组
 	var curPosArray = [];
 
 	//滑动的指针
 	var moving = 0;
-
-	//将第一个元素放在最后,或将最后一个元素放在第一个
-	var isToEnd = 0,
-	isToFirst = 0;
-
-	//阻尼距离
-	var bufferNum = 80;
 
 	function install(option){
 
@@ -85,7 +77,10 @@ $.fn.carousel  =  function (option) {
 		}
 
 		createPage();
-		initSlide()
+		
+		initSlide();
+
+		setPosition();		
 		// wrap();
 		bind();
 	};
@@ -110,21 +105,19 @@ $.fn.carousel  =  function (option) {
 			});
 		});
 
-		// listSonObj.hide().first().show();
-		setPosition();
 	}
 
-	//设置当前页的左右位置
+	//设置上一页，当前页，下一页位置
 	function setPosition(){
-		nextPos = nowPos + 1,
-		prevPos = nowPos - 1;
-		if(nextPos > nums){
-			nextPos = defaults.loop == 1 ? 1 : -1000;
+		var _nextPos = nowPos + 1,
+		_prevPos = nowPos - 1;
+		if(_nextPos > nums){
+			_nextPos = defaults.loop == 1 ? 1 : -1000;
 		}
-		if(prevPos < 1){
-			prevPos = defaults.loop == 1 ? nums : -1000;
+		if(_prevPos < 1){
+			_prevPos = defaults.loop == 1 ? nums : -1000;
 		}
-		curPosArray = [prevPos, nowPos, nextPos];
+		curPosArray = [_prevPos, nowPos, _nextPos];
 		resetSlider();
 	};
 
@@ -183,14 +176,14 @@ $.fn.carousel  =  function (option) {
 					return false;
 				}							
 				nowPos = i + 1;				
-				var direction = nowPos > oldPos ? "next" : "prev"; 				
-				if(direction == "next"){
+				var step = nowPos > oldPos ? 1 : -1; 				
+				if(step == 1){
 					curPosArray = [-100, oldPos, nowPos];
 				}else{
 					curPosArray = [nowPos, oldPos, -100];						
 				}		
 				resetSlider();
-				move(e, nowPos, direction);
+				move(e, step);
 
 			});
 		});
@@ -225,8 +218,7 @@ $.fn.carousel  =  function (option) {
 				currentPos = currentPos ? currentPos : startPos;
 				var _left = parseInt(curObj.css("left"));
 				_left = _left + e.clientX - currentPos;
-				curObj.css("left", _left + "px");
-								
+				curObj.css("left", _left + "px");								
 			}
 			currentPos = e.clientX;
 		});
@@ -234,18 +226,20 @@ $.fn.carousel  =  function (option) {
 		$(document).bind("mouseup", function(e){
 			// alert(draging);
 			if(!draging) return false;
-			currentPos = e.clientX;
+			draging = 0;
+			currentPos = e.clientX;			
 			if(Math.abs(currentPos - startPos) < 10){
 				startPos = 0;
 				currentPos = 0;
+				move(e, 0);			
 				return false;
 			}
+
 			if(currentPos > startPos){
 				toPrev(e);
 			}else{
 				toNext(e);
 			}
-			draging = 0;
 		});
 
 		return false;
@@ -260,11 +254,11 @@ $.fn.carousel  =  function (option) {
 			if(defaults.loop){
 				nowPos = nums;
 			}
-			move(e, nowPos, "prev");			
+			move(e, -1);			
 			return true;					
 		}
 		nowPos--;
-		move(e, nowPos, "prev");
+		move(e, -1);
 	}
 
 	function toNext(e){
@@ -275,59 +269,46 @@ $.fn.carousel  =  function (option) {
 			if(defaults.loop){
 				nowPos = 1;
 			}
-			move(e, nowPos, "next");							
+			move(e, 1);							
 			return true;					
 		}		
 		nowPos++;
-		move(e, nowPos, "next");
+		move(e, 1);
 	}
 
 	//设置显示区域margin-left属性，实现滑动功能
-	function move(e, nowPos, direction){		
-		if(nowPos == oldPos){
-			moving = 1;
-			$(slideObj).children().eq(nowPos - 1).animate({
-				'left': "0px"
-			}, defaults.speed, function(){
-				moving = 0;
-				setPosition();
-			});
-			return false;
-		}
-		defaults.startCallBack(e,nowPos);
+	// function move(e, nowPos, direction){		
+	// 	var step;
+	// 	if(direction == "next"){
+	// 		step = -1;
+	// 	}else{
+	// 		step = 1;
+	// 	}
+	// 	animate(e, step);
 		
-		if(direction == "next"){
-			marginLeft = -1;
-		}else{
-			marginLeft = 1;
-		}
+	// };
 
+
+
+	function move(e, step){
+		
+		defaults.startCallBack(e,nowPos);		
 		moving = 1;
+
 		for(var i = 0; i < curPosArray.length; i++){	
 			var curObj = $(slideObj).children().eq(curPosArray[i] - 1);
-			var _left = (i - 1) * liWidth + marginLeft * liWidth;
-			var _bufferLeft = (i - 1) * liWidth + (liWidth + bufferNum) * marginLeft;
-			
-			(function(curObj, _left){
-				curObj.animate({
-					'left': _left + "px"
-				}, defaults.speed, function(){
-					
-					// $(curObj).animate({
-					// 	'left': _left + "px"
-					// }, 300, function(){
-					// 	setPosition();						
-					// });
-
-					setPosition();						
-					changeClass(nowPos);
-					defaults.endCallback(e, nowPos);
-					moving = 0;
-					oldPos = nowPos;
-				});
-			})(curObj, _left);
+			var _left = (i - 1 - step) * liWidth;		
+			curObj.animate({
+				'left': _left + "px"
+			}, defaults.speed, function(){					
+				setPosition();																
+				changeClass(nowPos);
+				defaults.endCallback(e, nowPos);
+				moving = 0;
+				oldPos = nowPos;
+			});			
 		}
-	};
+	}
 
 	/* 改变翻页的class */
 	function changeClass(nowPos){

@@ -201,13 +201,14 @@ $.fn.carousel  =  function (option) {
 			});
 
 			$(document).bind("mouseup", function(e){
+				// alert(_draging);
 				if(!_draging) return false;
 				_draging = 0;
 				_currentPos = e.clientX;			
 				if(Math.abs(_currentPos - _startPos) < 10){
 					_startPos = 0;
 					_currentPos = 0;
-					_this.move(e, 0);
+					_this.move(e, 0);			
 					return false;
 				}
 
@@ -259,10 +260,8 @@ $.fn.carousel  =  function (option) {
 			if (this.nowPos <= 1) {
 				if(defaults.loop){
 					this.nowPos = this.nums;
-					this.move(e, -1);								
-				}else{
-					this.move(e, 0);
 				}
+				this.move(e, -1);			
 				return true;					
 			}
 			this.nowPos--;
@@ -274,12 +273,10 @@ $.fn.carousel  =  function (option) {
 				return false;
 			}
 			if (this.nowPos >= this.nums) {
-				if(defaults.loop){	
+				if(defaults.loop){
 					this.nowPos = 1;
-					this.move(e, 1);							
-				}else{
-					this.move(e, 0);
 				}
+				this.move(e, 1);							
 				return true;					
 			}		
 			this.nowPos++;
@@ -290,6 +287,7 @@ $.fn.carousel  =  function (option) {
 			var _this = this;
 			defaults.startCallBack(e, _this.nowPos);		
 			this.moving = 1;
+
 			for(var i = 0; i < this.curPosArray.length; i++){	
 				var curObj = $(slideObj).children().eq(this.curPosArray[i] - 1);
 				var _left = (i - 1 - step) * this.liWidth;		
